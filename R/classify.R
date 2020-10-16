@@ -20,8 +20,9 @@ dk_classify = function(x = dk_eg,asp = 3,show_img = F,show_link = F){
     if(re>2){
      #warning('re > 2 :: not a dk')
     }
+      message
       #normal dk
-      ref =as.numeric(flow[as.numeric(re),'ref'])
+      ref =flow[as.numeric(re),'ref']
     }
   }
   return(flow[as.numeric(re),asp])
