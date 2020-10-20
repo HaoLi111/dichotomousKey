@@ -18,7 +18,7 @@ https://github.com/HaoLi111/docu-sys-modelling-toolbox/blob/master/DichotomousKe
 Looking forward to your suggestion!
 
 **Note: dk_search and dk_extract works for the generalized form of dk tables which each branch have 2 options (only branching 2 at a time) other functions are not guaranteed to work with this/ 
-The suggested columns are id(identity of the father node for each sub-tree)/ P(phenotypical properties)/G(genotypical properties)/ref(reference to the next node for classifications)**
+The suggested columns are id(identity of the father node for each sub-tree)/ P(phenotypical properties)/G(genotypical properties or species name)/ref(reference to the next node for classifications)**
 You are welcomed to add supports for multiple selections for each classification step (or node). For the future, may use edges of the trees and sub-trees to store the data for faster computation and memory saving.
 
 Suggestion for quick view
