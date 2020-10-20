@@ -57,9 +57,10 @@ list_as_dk = function(x){
     sub['pause'] =FALSE
    # print(df)
    # print(sub)
-  }#
-
+  }
   colnames(df) = c('id','P','G','ref')
+  df2 = data.frame(id = as.integer(df[,'id']),P = df[,'P'],G = df[,'G'],ref = as.integer(df[,'ref']))
+  colnames(df2) = c('id','P','G','ref')
 
-  return(df)
+  return(df2)
 }
