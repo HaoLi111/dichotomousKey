@@ -19,3 +19,49 @@ dk_eg = data.frame(id = c(1,1,2,2,3,3,4,4),
                                 G = c('plants','animal','tree','flower','fish','land_animal','mammal','bird'),
                                 ref = c(2,3,0,0,0,4,0,0),stringsAsFactors = F)
 #View(dichotomousKey_str)
+#append dk2 onto dk 1
+dk_bird = data.frame(id = c(1,1),
+                    P = c("Big","Small"),
+                    G = c("Big Bird","Small Bird"),
+                    ref = c(0,0))
+dk_append = function(dk1,dk2,append_to){
+  dk1 = dk1[order(dk1$id),]
+  dk2 = dk2[order(dk2$id),]
+  dk1MaxRef = max(dk1$ref)
+  dk2$id = dk2$id + dk1MaxRef
+  dk1[which(dk1$G==append_to),'ref'] = dk1MaxRef+1
+  rbind(dk1,dk2)
+}
+#dk_append(dk_eg,dk_bird,"bird")
+
+dk_partition = function(dk,fatherTreeNode){
+  dk = dk[order(dk$id),]
+  ref1=dk[which(dk$G==fatherTreeNode),"ref"]
+  dk = dk[which(dk$id>=ref1),]
+  id =NULL;P=NULL;G=NULL;ref=NULL
+  #message(dk)
+  flag_changed = TRUE
+  while(flag_changed){
+    flag_changed = FALSE
+    nr = nrow(dk)
+    if(nr==0) break()
+    for(i in 1:nr){
+      i_rm = c()
+      if((dk$id[i]) %in% c(ref,ref1)){
+        id = c(id,dk$id[i])
+        P = c(P,dk$P[i])
+        G = c(G,dk$G[i])
+        ref = c(ref,dk$ref[i])
+        flag_changed = TRUE
+        i_rm = c(i_rm,i)
+      }
+    }
+    if(!is.null(i_rm)){
+      dk = dk[-i_rm,]
+    }else{
+      break()
+    }
+  }
+  data.frame(id=id,P=P,G=G,ref =ref)
+}
+#dk_partition(dk_append(dk_eg,dk_bird,"bird"),"animal")
