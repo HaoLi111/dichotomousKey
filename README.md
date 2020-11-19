@@ -38,28 +38,13 @@ Append and partition
 9   5              Big    Big Bird   0
 10  5            Small  Small Bird   0
 > dk_partition(dk_append(dk_eg,dk_bird,"bird"),"animal")
-   id                P           G ref
-1   3 live under water        fish   0
-2   3     live on land land_animal   4
-3   4             hair      mammal   0
-4   4         feathers        bird   5
-5   5              Big    Big Bird   0
-6   5            Small  Small Bird   0
-7   3 live under water        fish   0
-8   3     live on land land_animal   4
-9   4             hair      mammal   0
-10  4         feathers        bird   5
-11  5              Big    Big Bird   0
-12  3 live under water        fish   0
-13  3     live on land land_animal   4
-14  4             hair      mammal   0
-15  4         feathers        bird   5
-16  3 live under water        fish   0
-17  3     live on land land_animal   4
-18  4             hair      mammal   0
-19  3 live under water        fish   0
-20  3     live on land land_animal   4
-21  3 live under water        fish   0
+  id                P           G ref
+1  3 live under water        fish   0
+2  3     live on land land_animal   4
+3  4             hair      mammal   0
+4  4         feathers        bird   5
+5  5              Big    Big Bird   0
+6  5            Small  Small Bird   0
 ```
 Suggestion for quick view
 
