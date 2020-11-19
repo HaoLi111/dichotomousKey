@@ -45,8 +45,8 @@ dk_partition = function(dk,fatherTreeNode){
     flag_changed = FALSE
     nr = nrow(dk)
     if(nr==0) break()
+    i_rm = NULL
     for(i in 1:nr){
-      i_rm = c()
       if((dk$id[i]) %in% c(ref,ref1)){
         id = c(id,dk$id[i])
         P = c(P,dk$P[i])
@@ -57,6 +57,9 @@ dk_partition = function(dk,fatherTreeNode){
       }
     }
     if(!is.null(i_rm)){
+      if(length(i_rm)==nr){
+        break()
+      }
       dk = dk[-i_rm,]
     }else{
       break()
@@ -64,4 +67,4 @@ dk_partition = function(dk,fatherTreeNode){
   }
   data.frame(id=id,P=P,G=G,ref =ref)
 }
-#dk_partition(dk_append(dk_eg,dk_bird,"bird"),"animal")
+dk_partition(dk_append(dk_eg,dk_bird,"bird"),"animal")
