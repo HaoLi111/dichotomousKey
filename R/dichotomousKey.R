@@ -67,4 +67,4 @@ dk_partition = function(dk,fatherTreeNode){
   }
   data.frame(id=id,P=P,G=G,ref =ref)
 }
-dk_partition(dk_append(dk_eg,dk_bird,"bird"),"animal")
+#dk_partition(dk_append(dk_eg,dk_bird,"bird"),"animal")
