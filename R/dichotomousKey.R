@@ -68,3 +68,49 @@ dk_partition = function(dk,fatherTreeNode){
   data.frame(id=id,P=P,G=G,ref =ref)
 }
 #dk_partition(dk_append(dk_eg,dk_bird,"bird"),"animal")
+dk_reduce = function(dk){
+  min_id = min(dk$id)
+  dk['id']=dk['id'] - min_id +1
+  for(i in 1:nrow(dk)){
+    if(dk[i,'ref']!=0) dk[i,'ref'] = dk[i,'ref']-min_id+1
+  }
+  return(dk)
+}
+#dk_reduce(dk_partition(dk_append(dk_eg,dk_bird,"bird"),"animal"))
+dk_is_a = function(a,b,dk){# a is a b
+  dk = dk[order(dk$id),]
+  ref1=dk[which(dk$G==b),"ref"]
+  dk = dk[which(dk$id>=ref1),]
+  id =NULL;G=NULL;ref=NULL
+  flag_changed = TRUE
+  while(flag_changed){
+    flag_changed = FALSE
+    nr = nrow(dk)
+    if(nr==0) break()
+    i_rm = NULL
+    for(i in 1:nr){
+      if((dk$id[i]) %in% c(ref,ref1)){
+        if(dk$G[i]==a) return(TRUE)
+        id = c(id,dk$id[i])
+
+        G = c(G,dk$G[i])
+        ref = c(ref,dk$ref[i])
+        flag_changed = TRUE
+        i_rm = c(i_rm,i)
+      }
+    }
+    if(!is.null(i_rm)){
+      if(length(i_rm)==nr){
+        return(FALSE)
+      }
+      dk = dk[-i_rm,]
+    }else{
+      return(FALSE)
+    }
+  }
+
+}
+
+#dk_is_a("Small Bird","land_animal",dk_partition(dk_append(dk_eg,dk_bird,"bird"),"animal"))
+#dk_is_a("bird","animal",dk_eg)
+#dk_is_a("fish","land_animal",dk_eg)
