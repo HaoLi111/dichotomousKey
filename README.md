@@ -21,9 +21,18 @@ Looking forward to your suggestion!
 The suggested columns are id(identity of the father node for each sub-tree)/ P(phenotypical properties)/G(genotypical properties or species name)/ref(reference to the next node for classifications)**
 You are welcomed to add supports for multiple selections for each classification step (or node). For the future, may use edges of the trees and sub-trees to store the data for faster computation and memory saving.
 
-Newly implemented,undocumented feature:
+Basic usages:
+(Use help() or ? <function name> to see manual)
+dk_classify() classify in interactive mode, with a given DK table
+dk_extract() extract phenotypes in the DK table of certain species
+dk_as_list() convert a table formed DK to a list
+list_as_dk() the inverse of dk_as_list()
 
-Append and partition
+Newly implemented, undocumented feature:
+dk_append - append one DK table to a node of another (expand the node with ref 0 to do more specific classification)
+dk_partition - (snip out DK table of sub-classes of some species)
+dk_reduce - with a DK snippnet, reduce the value of id an ref to minimum required
+dk_is_a - judge if some species belongs to some larger species in certain DK table
 ```
 > dk_append(dk_eg,dk_bird,"bird")
    id                P           G ref
@@ -45,7 +54,23 @@ Append and partition
 4  4         feathers        bird   5
 5  5              Big    Big Bird   0
 6  5            Small  Small Bird   0
+> dk_reduce(dk_partition(dk_append(dk_eg,dk_bird,"bird"),"animal"))
+  id                P           G ref
+1  1 live under water        fish   0
+2  1     live on land land_animal   2
+3  2             hair      mammal   0
+4  2         feathers        bird   3
+5  3              Big    Big Bird   0
+6  3            Small  Small Bird   0
+> dk_is_a("Small Bird","land_animal",dk_partition(dk_append(dk_eg,dk_bird,"bird"),"animal"))
+[1] TRUE
+> dk_is_a("bird","animal",dk_eg)
+[1] TRUE
+> dk_is_a("fish","land_animal",dk_eg)
+[1] FALSE
 ```
+
+Suggestion for saving:: It is suggested that when you  save an edited form as a table(txt/csv/excel) use a different file name(otherwise R might overwrite the file w/o warning).
 Suggestion for quick view
 
 As a table:
