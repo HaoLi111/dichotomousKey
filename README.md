@@ -1,6 +1,12 @@
 # dichotomousKey
 Package: dichotomousKey Type: Package Title: Dichotomous Key Manipulation Version: 0.1.0 Author: Hao Li Maintainer: Hao Li &lt;lhrcplanes@qq.com> Description: R package to manipulate Dichotomous Key.     Functions included are interactive classification CLI tools, extraction tools, and file and format transformation tools.     Functions can work on custom data as data frames or lists. License: GPL V3 Encoding: UTF-8 LazyData: true
 
+For a brief intro
+https://www.youtube.com/watch?v=k3YuUmKUYRQ
+or
+https://www.bilibili.com/video/BV1ua4y1n7b4
+
+
 You need Rtools and devtools to build the package. using
 ```
 install.packages("devtools")
