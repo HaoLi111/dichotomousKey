@@ -24,6 +24,7 @@ dk_bird = data.frame(id = c(1,1),
                     P = c("Big","Small"),
                     G = c("Big Bird","Small Bird"),
                     ref = c(0,0))
+
 dk_append = function(dk1,dk2,append_to){
   dk1 = dk1[order(dk1$id),]
   dk2 = dk2[order(dk2$id),]
@@ -78,6 +79,7 @@ dk_reduce = function(dk){
 }
 #dk_reduce(dk_partition(dk_append(dk_eg,dk_bird,"bird"),"animal"))
 dk_is_a = function(a,b,dk){# a is a b
+  if(a==b) return(TRUE)
   dk = dk[order(dk$id),]
   ref1=dk[which(dk$G==b),"ref"]
   dk = dk[which(dk$id>=ref1),]

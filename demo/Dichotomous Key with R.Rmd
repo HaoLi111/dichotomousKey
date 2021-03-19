@@ -1,0 +1,197 @@
+---
+title: "Dichotomous Key with R"
+author: "Hao Li"
+date: "3/19/2021"
+output: word_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# Installation
+```
+
+install.packages("devtools")
+require(devtools)
+install_github("HaoLi111/dichotomousKey")
+
+```
+```{r}
+
+require(dichotomousKey)#load the package
+```
+
+
+
+# Dichotomous Key Used for classfication
+
+Using a dk table, one can get the name of the species by answering a series of questions. For example, to classify myself as a human.
+
+ - First, I ask: am I animal-like or plant like?
+I am animal-like, so I go to the next question to see what kind of animal I am:
+ - Do I live on land or water? My answer is : on land. go to next question to classify land animals:
+ - Do I have feathers, or just skins and hair? Well certainly I am not an angel, so I do not have feathers. I belong to the section "mammal"
+ 
+Now considering converting the series of questions to a table below:
+
+```{r dk_eg}
+knitr::kable(dk_eg)
+```
+
+Note that it follows the format of:
+
+
+(words in the parenthesis () are notations, not to be included)
+
+*id(index) | P(Phenotype) | G(Genotypical reference) | ref(reference) | ... ...*
+
+*Note that phenotypes and genotypes are only analogies to the entries in the dataset.*
+
+
+Clearly, one can start from the father node ID 1, starting from line 1,2
+```{r}
+dk_eg[dk_eg$id==1,]
+```
+
+since they both have father node ID 1. I am animal, so I look at the second row, 4th column. The number there points to the next father node ID I should look for, in this case, 3.
+
+```{r}
+dk_eg[dk_eg$id==3,]
+```
+
+Since I live on land, I go to "land animal". The reference point to node 4
+
+
+```{r}
+dk_eg[dk_eg$id==4,]
+```
+
+When the reference column(4th column) is 0. I know that this table cannot classify further.
+
+## dk_classify
+
+The process above can be automated using *dk_classify()*. Hence,
+
+```
+> me = dk_classify(dk_eg)
+classification start from dk_eg 
+ in interactive mode 
+ to abort type'q'
+Phenotypical characteristic:
+Key ::  1  :: 
+plants like :: || ::plants
+Key ::  2  :: 
+animal like :: || ::animal
+2
+Phenotypical characteristic:
+Key ::  1  :: 
+live under water :: || ::fish
+Key ::  2  :: 
+live on land :: || ::land_animal
+2
+Phenotypical characteristic:
+Key ::  1  :: 
+hair :: || ::mammal
+Key ::  2  :: 
+feathers :: || ::bird
+1
+> me
+[1] "mammal"
+```
+For each step of interaction, the function prints the options in the console. Press 1 or 2 to answer the questions to continue.
+
+## Why use dk table?
+
+Efficient: to classify among 2^n species, it needs n questions at its best. 
+Deterministic: given a list of phenotypes, one cannot get 2 different answers
+
+# Functionalities
+
+So far we know how to classify a species using a naive example. Of course you can import your table as dataframes with StringsAsFactors==F. But that is uninteresting. The text below gives a thorough instruction on the capability of the data structure.
+
+## Table-List convertions
+
+You can convert a table form dk dataset to its list form, & vice versa.
+The corresponding functions are *dk_as_list()* and *list_as_dk*
+
+```{r}
+dk_as_list(dk_eg)
+```
+
+Using other packages, put it in a better form:
+
+```{r}
+library(Hmisc)
+list.tree(dk_as_list(dk_eg),fill = "     -")
+```
+
+## dk_extract: Given a specimen, extract expected phenotypes
+
+Suppose I know I am a mammal, but I want to know what properties I have, I can extract my expected phenotypes from a dk table.
+
+```{r}
+me = "mammal"
+dk_extract(dk_eg,me)
+```
+
+## dk_append() what if I want to combine 2 tables together?
+
+```{r}
+dk_bird
+```
+
+dk_bird is a finer table that only classify with the assumption that the specimen is a bird.
+
+```{r}
+
+dk_append(dk_eg,dk_bird,"bird")
+```
+
+
+## dk_partition() Given a large dk set, partition a smaller dk table only classifying some subspecies or sub subclasses
+In this case, want the smaller dk starting from questions on animals only.
+But since it is best to start with father node index==1, we use dk_reduce to correct the id and ref data.
+
+
+```{r}
+dk_partition(dk_append(dk_eg,dk_bird,"bird"),"animal")
+dk_reduce(dk_partition(dk_append(dk_eg,dk_bird,"bird"),"animal"))
+```
+
+## dk_is_a(): check inheritance: does one specie belong to a given class?
+
+```{r}
+dk_is_a("Small Bird","land_animal",dk_partition(dk_append(dk_eg,dk_bird,"bird"),"animal"))
+dk_is_a("bird","animal",dk_eg)
+dk_is_a("fish","land_animal",dk_eg)
+```
+
+# Application on larger datasets?
+
+Suppose I have a list of observations:
+
+```{r}
+fieldwork_findings = data.frame(n = 1:10,sps=c("bird","bird","Big Bird","Small Bird","fish","mammal","fish","bird","Small Bird","Bird"))
+```
+
+Let's do bird count
+
+```{r}
+
+is_bird = sapply(fieldwork_findings$sps, dk_is_a,b = "bird",dk = dk_append(dk_eg,dk_bird,"bird"))
+is_bird
+length(is_bird[is_bird==TRUE])
+
+
+
+```
+
+More importantly one might want to calculate diversity up to a certain level, for example, how many *species* does the dataset contain can differ from how many *subspecies* the dataset contains. However this is only sensible for large amount of data.
+
+# Prospective: Abstraction by row index: for datasets more than 4 columns
+
+What if one wants to add links as a 5th column of the table? or maybe pictures? A sensible way to do such manipulations is to specify the output row IDs.
+
+
+
